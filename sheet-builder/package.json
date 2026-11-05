@@ -11,6 +11,7 @@
     "sign-in": "tsx src/sign-in.ts",
     "show-token": "tsx src/sign-in.ts --print",
     "smoke": "tsx src/smoke.ts",
+    "build-sheet": "tsx src/build.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
