@@ -1,0 +1,25 @@
+{
+  "name": "revenue-tracker-sheet-builder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Builds the Advanced Revenue Delivery Tracker Google Sheet via the Sheets API (docs/SPEC-AMENDMENTS.md A-9)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sign-in": "tsx src/sign-in.ts",
+    "show-token": "tsx src/sign-in.ts --print",
+    "smoke": "tsx src/smoke.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "googleapis": "^188.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
