@@ -14,8 +14,8 @@ You do steps 1 to 5 once. Total time is about 15 minutes.
    account the Quote Calculator uses).
 2. Open the project picker, choose **New Project** and name it `revenue-tracker-builder`.
 3. In that project go to **APIs & Services → Library** and enable both:
-   - **Google Sheets API**
-   - **Google Drive API** (only used to delete throwaway test sheets)
+   - **Google Sheets API** (do **not** enable the Google Drive API: leaving it off means nothing here can
+     delete or trash the spreadsheet file itself)
 
 ## 2. Configure the OAuth consent screen
 1. Go to **APIs & Services → OAuth consent screen** (it may be called **Google Auth Platform → Branding**).
@@ -52,19 +52,25 @@ The cloud has no browser, so it reads the token from an environment variable ins
 > the environment can use it. To revoke at any time, remove "Revenue Tracker Builder" at
 > https://myaccount.google.com/permissions and delete the variable.
 
-The environment already exists and allows only `oauth2.googleapis.com`, `sheets.googleapis.com` and
-`drive.googleapis.com` (plus package registries). You do not need to change its network settings.
+The environment should allow only `oauth2.googleapis.com` and `sheets.googleapis.com` (plus package
+registries). `drive.googleapis.com` is no longer needed and can be removed from its network settings.
+
+## What the builder can and cannot do
+- It works in **one spreadsheet**, pinned in `src/workspace.ts` (`SPREADSHEET_ID`, or the `SHEET_ID` variable).
+- It can read, write, append, add tabs and format.
+- It **cannot** create spreadsheets, delete the file, or delete/clear tabs, rows, columns or ranges: those
+  requests are rejected in code, and the Drive API is never called.
 
 ## 6. Check it works
 Start a **new session on the `advanced-revenue-monitor` environment** with this repo selected and ask Claude to
 run the smoke test. Or run it yourself:
 
 ```bash
-npm run smoke -- --delete
+npm run smoke
 ```
 
-It creates a throwaway sheet with no real data, checks that formulas calculate, and deletes it. Expect four
-`PASS` lines. It also records how real Google Sheets rounds `1.005`, which the engine must match.
+It writes four test formulas into a `smoke` tab of the workspace sheet and checks they calculate. Expect
+five `PASS` lines. It also records how real Google Sheets rounds `1.005`, which the engine must match.
 
 ## If something is blocked
 - **Can't create a project, or an API is blocked:** your Workspace admin may restrict this. Ask them to allow
