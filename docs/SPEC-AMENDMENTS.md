@@ -17,6 +17,7 @@ Items marked **Owner decision** were chosen by the project owner. Items marked
 | A-6 | Open item 2 | **No time limit or escalation in the spreadsheet.** `Awaiting Renewal` is a status only. No Settings field. | §13.2, §6.4 |
 | A-7 | Open item 3 / journals | **Two separate journals per month**: RR (Dr 102 / Cr 801) and Projects (Dr 200 / Cr 801). Each is balanced on its own. This amends D-11 (aggregated per account, now per journal). `Journal_Register` stores the two journals separately. | §7, §8.2, D-11 |
 | A-8 | Protections | Everything is **warning-only**. Role restrictions in §8.3 are a manual post-build step. | §8.3 |
+| A-9 | Build route | The workbook is built by a **TypeScript Sheets-API builder** (`sheet-builder/`, `googleapis`, one atomic `batchUpdate`), not an Apps Script. It follows the Quote Calculator's pattern: OAuth refresh token with the `drive.file` scope, read-back checks and scenario tests run against the live sheet. The live workbook still contains no scripts. It runs in its own environment (`advanced-revenue-monitor`, exact Google hosts only) with its own OAuth client and a `GOOGLE_TOKEN_JSON` variable saved by the owner. Supersedes B-15. | §10 (`apps-script/` becomes `sheet-builder/`), §12 S7-S8 |
 
 ## B. Defaults (pending owner approval)
 
@@ -36,5 +37,5 @@ Items marked **Owner decision** were chosen by the project owner. Items marked
 | B-12 | Pace dates | `AM_Pace_Monitoring` uses an **As-of date** in Settings (default `=TODAY()`), so tests can fix it. |
 | B-13 | Capacity | `Calc_Engine` is pre-built for 100 engagement slots × the horizon. A note in the workbook says to start a new cutover before the horizon ends. |
 | B-14 | Extra checks | Add: unmapped Harvest project rows, unmatched billing rows, and a monthly `Σ Closing $` vs Xero balance input. |
-| B-15 | Build script | Standalone Apps Script project (opens the sheet by ID), so the finished workbook contains no script. |
+| B-15 | Build script | ~~Standalone Apps Script project~~ **Superseded by A-9** (Sheets-API builder; the finished workbook still contains no script). |
 | B-16 | Tests | S7 and S8 are checked at workbook level in step 3. Engine tests in step 1 cover S1–S6. |
