@@ -81,25 +81,3 @@ five `PASS` lines. It also records how real Google Sheets rounds `1.005`, which 
   delete `token.json`, and run `npm run sign-in` again.
 - **Smoke test fails with a network error in the cloud:** the session is probably not on the
   `advanced-revenue-monitor` environment, or `GOOGLE_TOKEN_JSON` was added after the session started.
-
-## Limit it with Google: use a service account (recommended)
-
-A personal sign-in can reach every file the app created and is the owner of them. A service account is a
-separate identity that Google limits to exactly the spreadsheets you share with it, and it cannot delete a
-file it does not own.
-
-1. In the `revenue-tracker-builder` project go to **IAM & Admin → Service Accounts → Create service account**
-   (name `sheet-builder`). Skip the optional role and user-access steps: it needs **no** project roles.
-2. Open it → **Keys → Add key → Create new key → JSON**. Download the file.
-3. Open the workspace spreadsheet, click **Share**, add the service account's email
-   (`...@revenue-tracker-builder.iam.gserviceaccount.com`) as **Editor**, untick **Notify**, and keep you as owner.
-   In the share dialog's settings, turn **off** "Editors can change permissions and share".
-4. Confirm **Google Drive API** is **disabled** in **APIs & Services → Enabled APIs** (only the Sheets API is on).
-5. In the `advanced-revenue-monitor` cloud environment, add a variable `GOOGLE_SERVICE_ACCOUNT_JSON` with the
-   whole key file contents, and **remove `GOOGLE_TOKEN_JSON`** so the personal sign-in is no longer available.
-   Remove `drive.googleapis.com` from the allowed hosts. Start a new session afterwards.
-6. Revoke the old personal access at https://myaccount.google.com/permissions ("Revenue Tracker Builder").
-7. Run `npm run smoke`. It should print no "signing in as a person" warning.
-
-Google keeps **version history** (File → Version history), so you can restore the sheet to any earlier state
-if a tab or range is ever overwritten.

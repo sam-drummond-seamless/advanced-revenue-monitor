@@ -17,30 +17,6 @@ export const TOKEN_PATH = path.join(ROOT, 'token.json');
  */
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 
-/**
- * Preferred: a service account. It can only reach spreadsheets that have been shared with its email, and
- * it does not own them, so Google itself stops it touching anything else or deleting the file. The
- * "spreadsheets" scope is safe here for that reason: unlike a personal sign-in, it grants nothing beyond
- * the sheets shared with the account.
- */
-export const SERVICE_ACCOUNT_ENV = 'GOOGLE_SERVICE_ACCOUNT_JSON';
-const SERVICE_ACCOUNT_SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-
-function serviceAccountClient(): SheetsAuth | null {
-  const raw = process.env[SERVICE_ACCOUNT_ENV];
-  if (!raw) return null;
-  let key: { client_email?: string; private_key?: string };
-  try {
-    key = JSON.parse(raw) as typeof key;
-  } catch {
-    throw new Error(`${SERVICE_ACCOUNT_ENV} is not valid JSON. Paste the whole service-account key file into it.`);
-  }
-  if (!key.client_email || !key.private_key) {
-    throw new Error(`${SERVICE_ACCOUNT_ENV} has no client_email/private_key. Use a service-account JSON key.`);
-  }
-  return new google.auth.JWT({ email: key.client_email, key: key.private_key, scopes: SERVICE_ACCOUNT_SCOPES }) as unknown as SheetsAuth;
-}
-
 /** In the cloud there is no token.json: this variable holds its contents instead. */
 export const TOKEN_ENV = 'GOOGLE_TOKEN_JSON';
 
@@ -88,10 +64,6 @@ async function saveToken(refreshToken: string): Promise<void> {
  * googleapis cannot use, so the client is always rebuilt from the saved refresh token.
  */
 export async function getAuthClient(): Promise<SheetsAuth> {
-  const serviceAccount = serviceAccountClient();
-  if (serviceAccount) return serviceAccount;
-  console.warn('Warning: signing in as a person, not a service account. Google is not limiting this to one spreadsheet. See SETUP.md.');
-
   const saved = await loadSavedToken();
   if (saved) return saved;
 
