@@ -57,9 +57,10 @@ registries). `drive.googleapis.com` is no longer needed and can be removed from 
 
 ## What the builder can and cannot do
 - It works in **one spreadsheet**, pinned in `src/workspace.ts` (`SPREADSHEET_ID`, or the `SHEET_ID` variable).
-- It can read, write, append, add tabs and format.
-- It **cannot** create spreadsheets, delete the file, or delete/clear tabs, rows, columns or ranges: those
-  requests are rejected in code, and the Drive API is never called.
+- It can read, write, append, clear, add and delete tabs, rows and ranges, and format, all inside that sheet.
+  Google's File > Version history can restore earlier states.
+- It **cannot** create spreadsheets or delete/trash the spreadsheet file itself: the Drive API is never
+  called and should stay disabled.
 
 ## 6. Check it works
 Start a **new session on the `advanced-revenue-monitor` environment** with this repo selected and ask Claude to

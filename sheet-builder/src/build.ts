@@ -6,8 +6,7 @@ import { getWorkspace } from './workspace.ts';
  *
  *   npm run build-sheet
  *
- * Everything goes in ONE atomic batchUpdate, so a failure leaves the sheet untouched. The builder never deletes:
- * if any target tab already exists it stops and says so (the one exception is the blank default "Sheet1",
+ * Everything goes in ONE atomic batchUpdate, so a failure leaves the sheet untouched. If any target tab already exists it stops and says so (the one exception is the blank default "Sheet1",
  * which is renamed to "Settings"). To rebuild a tab, delete it by hand in the sheet first.
  */
 process.on('uncaughtException', (err: Error & { status?: number }) => {
@@ -263,7 +262,7 @@ const sheet1 = existing.find((e) => e.title === 'Sheet1');
 const blockers = TABS.map((t) => t.title).filter((t) => has(t));
 if (has('Settings')) blockers.push('Settings');
 if (blockers.length) {
-  console.error(`Stopped: these tabs already exist: ${blockers.join(', ')}.\nThis builder never deletes or overwrites tabs. Delete them by hand in the sheet if you want a rebuild.`);
+  console.error(`Stopped: these tabs already exist: ${blockers.join(', ')}.\nThis build step does not overwrite tabs. Delete them in the sheet if you want a rebuild.`);
   process.exit(1);
 }
 
